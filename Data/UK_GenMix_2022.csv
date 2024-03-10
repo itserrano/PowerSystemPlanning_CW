@@ -6,10 +6,8 @@ Coal,4240
 Solar,14040.748
 OffshoreWind,13427.7
 OnshoreWind,13596.419
-,
-,
-,
-,
-,
-,
-,
+Gas-CCS-95,0
+Gas-CCS-97,0
+BESS-2H,0
+BESS-6H,0
+BESS-10H,0
