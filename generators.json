@@ -1,0 +1,24 @@
+{
+    "EU": [
+        "Gas-CC-EU",
+        "Solar-EU"
+    ],
+    "rve": [
+        "OnshoreWind",
+        "OffshoreWind",
+        "Solar"
+    ],
+    "BESS": [
+        "BESS-2H",
+        "BESS-6H",
+        "BESS-10H"
+    ],
+    "Conv": [
+        "Nuclear",
+        "Coal",
+        "Gas-CC",
+        "Gas-CT",
+        "Gas-CCS-95",
+        "Gas-CCS-97"
+    ]
+}
