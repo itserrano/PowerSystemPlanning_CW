@@ -1,5 +1,4 @@
 using JuMP,DataFrames, CSV, Gurobi, Statistics, DataStructures, XLSX, Dates
-import ParametricOptInterface as POI
 include("mycolorscheme.jl")
 include("Data_Functions.jl")
 root = "Data/"
