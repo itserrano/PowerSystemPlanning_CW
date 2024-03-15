@@ -145,7 +145,7 @@ for scenario in results
     global installed_capacity = DataFrame()
     generation = DataFrame()
     for generator in G
-        installed_capacity[!,generator] = [data["Capacity"][generator] + cap_0[generator]]
+        installed_capacity[!,generator] = [data["Capacity"][generator]]
         if generator ∉ (G_bess)
             generation[!,generator] = data["Generation"][generator,:].data
         else
@@ -195,14 +195,16 @@ using PlotlyJS
 p1 = plot(
     [bar(name=g, x=keys(scenarios), y = [processed_results[scenario]["Installed_Capacity"][1,g]-cap_0[g] for scenario in keys(scenarios)]) for g in G]
 ,Layout(
-    colorway=mycolorscheme,plot_bgcolor="white",barmode="stack", title = "Additional Installed Capacity by Scenario", xaxis_title="Scenario", yaxis_title="Installed Capacity (MW)"))
+    colorway=mycolorscheme,plot_bgcolor="white",barmode="stack", title = "Additional Installed Capacity by Scenario", 
+    xaxis_title="Scenario", yaxis_title="Installed Capacity (MW)", font=attr(size=12)))
 display(p1)
 
 using Printf
 display(plot([
     bar(name="Non Served Energy", x=keys(scenarios), y = [sum(processed_results[scenario]["Generation"][:,"NSE"]) for scenario in keys(scenarios)], text=
     [@sprintf("%.2f",sum(processed_results[scenario]["Generation"][:,"NSE"])) for scenario in keys(scenarios)])], Layout(title = "Non Served Energy by Scenario",
-    xaxis_title="Scenario", yaxis_title="Non Served Energy (MWh)",colorway=mycolorscheme,plot_bgcolor="white")))
+    xaxis_title="Scenario", yaxis_title="Non Served Energy (MWh)",colorway=mycolorscheme,plot_bgcolor="white",
+    font=attr(size=12))))
 
 
 for scenario in keys(scenarios)
@@ -217,7 +219,7 @@ for scenario in keys(scenarios)
         [scatter(x=date, y=processed_results[scenario]["Generation"][:,"Gas-CC-EU"], mode="lines", name="Gas Generation", stackgroup="one"),
         scatter(x=date, y=processed_results[scenario]["Generation"][:,"Solar-EU"], mode="lines", name="Solar Generation", stackgroup="one")],
         Layout(colorway=mycolorscheme,plot_bgcolor="white",
-        title="Power Flow and Generation "*scenario, xaxis_title="Hour", yaxis_title="Power (MW)")))
+        title="Power Flow and Generation "*scenario, xaxis_title="Hour", yaxis_title="Power (MW)", font=attr(size=12))))
 end
 
 display(plot(
@@ -228,5 +230,14 @@ display(plot(
     scatter(x=date, y=processed_results["Tax_Flow_Variable"]["Emissions"][:,"Emissions"]./1e6, mode="lines", name="Variable Flow Tax"),
     ],
     Layout(colorway=mycolorscheme,plot_bgcolor="white",
-    title="Emissions by Scenario", xaxis_title="Hour", yaxis_title="Emissions (kTonCO2)")))
+    title="Emissions by Scenario", xaxis_title="Hour",font=attr(size=12), yaxis_title="Emissions (kt CO2)")))
 
+
+real_emissions = [sum(processed_results[scenario]["Emissions"][:,"Emissions"]) for scenario in keys(scenarios)]
+reported_emissions = [sum(processed_results[scenario]["Emissions"][:,"ReportedEmissions"]) for scenario in keys(scenarios)]
+
+display(plot(
+    [bar(x=keys(scenarios), y=real_emissions.*1e-9, name="Real Emissions", text=[@sprintf("%.2f",x) for x in real_emissions.*1e-9]),
+    bar(x=keys(scenarios), y=reported_emissions.*1e-9, name="Reported Emissions", text=[@sprintf("%.2f",x) for x in reported_emissions.*1e-9])],
+    Layout(barmode="group",colorway=mycolorscheme,plot_bgcolor="white",title="Emissions by Scenario", xaxis_title="Scenario", yaxis_title="Emissions (Mt CO2)",font=attr(size=12))
+))
